@@ -9,29 +9,43 @@ class fetchEmail {
 		$this->url = $url;
 	}
 
+	function checkUrl() {
+		if (filter_var($this->url, FILTER_VALIDATE_URL) === FALSE) {
+			return false;
+		}
+
+		return true;
+	}
+
 	function getContents() {
+		if (!$this->checkUrl()) {
+			return false;
+		}
 		$buffer = file_get_contents($this->url);
+
 		return $buffer;
 	}
 
 	function startScraping() {
-		// Get page content
+		// get page content
 		$pageContent = $this->getContents();
-		echo 'Scraping URL: ' . $this->url . PHP_EOL;
+		if ($pageContent) {
+			echo 'Scraping URL: ' . $this->url . PHP_EOL;
 
-		// Get list of all emails on page
-		preg_match_all('/([\w+\.]*\w+@[\w+\.]*\w+[\w+\-\w+]*\.\w+)/is', $pageContent, $results);
-		// Add the email to the email list array
-		$insertCount = 0;
-		foreach ($results[1] as $email) {
-			if (in_array($email, $this->emails)) {
-				continue;
+			// get emails from the URL
+			preg_match_all('/([\w+\.]*\w+@[\w+\.]*\w+[\w+\-\w+]*\.\w+)/is', $pageContent, $results);
+			// add emails to array
+			$insertCount = 0;
+			foreach ($results[1] as $email) {
+				if (in_array($email, $this->emails)) {
+					continue;
+				}
+
+				$this->emails[] = $email;
+				$insertCount++;
 			}
-
-			$this->emails[] = $email;
-			$insertCount++;
+			var_dump($this->emails);
 		}
-		var_dump($this->emails);
 	}
 }
 
