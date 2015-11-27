@@ -1,2 +1,2 @@
 # emailParser
-parse emails from a given URL
+parse email addresses from a given URL
