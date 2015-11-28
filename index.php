@@ -9,7 +9,7 @@ class fetchEmail {
 		$this->url = $url;
 	}
 
-	function checkUrl() {
+	function validateUrl() {
 		if (filter_var($this->url, FILTER_VALIDATE_URL) === FALSE) {
 			return false;
 		}
@@ -18,7 +18,7 @@ class fetchEmail {
 	}
 
 	function getContents() {
-		if (!$this->checkUrl()) {
+		if (!$this->validateUrl()) {
 			return false;
 		}
 		$buffer = file_get_contents($this->url);
@@ -30,7 +30,7 @@ class fetchEmail {
 		// get page content
 		$pageContent = $this->getContents();
 		if ($pageContent) {
-			echo 'Scraping URL: ' . $this->url . PHP_EOL;
+			echo 'Parsing URL: ' . $this->url . PHP_EOL;
 
 			// get emails from the URL
 			preg_match_all('/([\w+\.]*\w+@[\w+\.]*\w+[\w+\-\w+]*\.\w+)/is', $pageContent, $results);
